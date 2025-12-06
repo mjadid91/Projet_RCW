@@ -1,0 +1,28 @@
+PREFIX mesure: <http://www.semanticweb.org/medja/ontologies/2025/10/untitled-ontology-3#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+# Calcul de la densité d'infractions par km² pour chaque département
+SELECT ?nom ?densite
+WHERE {
+    # 1. Récupération des infos enrichies (Wikidata)
+    ?dept mesure:nomDepartement ?nom ;
+          mesure:superficie ?superficie .
+
+    # 2. Sous-requête : Comptage des infractions locales
+    {
+        SELECT ?dept (COUNT(?m) AS ?nb) WHERE {
+            ?m mesure:estLocaliseeDans ?dept ;
+               mesure:vitesseMesuree ?v ;
+               mesure:vitesseLimite ?l .
+            
+            # Filtre pour ne garder que les excès de vitesse réels
+            FILTER (?v > ?l)
+        } 
+        GROUP BY ?dept
+    }
+
+    # 3. Calcul final
+    BIND ((?nb / ?superficie) AS ?densite)
+}
+ORDER BY DESC(?densite)
+LIMIT 20

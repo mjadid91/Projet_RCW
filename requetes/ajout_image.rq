@@ -1,0 +1,19 @@
+PREFIX mesure: <http://www.semanticweb.org/medja/ontologies/2025/10/untitled-ontology-3#>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX wd: <http://www.wikidata.org/entity/>
+
+INSERT {
+    ?deptUri mesure:image ?image .
+}
+WHERE {
+    SELECT DISTINCT ?deptUri ?image WHERE {
+        ?s mesure:estLocaliseeDans ?deptUri .
+        BIND(STRAFTER(STR(?deptUri), "Departement_") AS ?codeInsee)
+        
+        SERVICE <https://query.wikidata.org/sparql> {
+            ?wikiEntity wdt:P31 wd:Q6465 ;
+                        wdt:P2586 ?codeInsee ;
+                        wdt:P94 ?image .
+        }
+    }
+}

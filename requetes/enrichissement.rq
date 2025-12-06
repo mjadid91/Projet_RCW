@@ -1,0 +1,33 @@
+PREFIX mesure: <http://www.semanticweb.org/medja/ontologies/2025/10/untitled-ontology-3#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wd: <http://www.wikidata.org/entity/>
+
+# Requête fédérée pour lier les entités locales à Wikidata et enrichir le graphe
+INSERT {
+    ?deptUri owl:sameAs ?wikiEntity .      # Lien SameAs
+    ?deptUri mesure:nomDepartement ?nom .  # Nom du département
+    ?deptUri mesure:population ?pop .      # Population
+    ?deptUri mesure:superficie ?area .     # Superficie
+}
+WHERE {
+    SELECT DISTINCT ?deptUri ?wikiEntity ?nom ?pop ?area WHERE {
+        # 1. Sélection des départements locaux
+        ?s mesure:estLocaliseeDans ?deptUri .
+        
+        # 2. Extraction du code INSEE (ex: "33")
+        BIND(STRAFTER(STR(?deptUri), "Departement_") AS ?codeInsee)
+
+        # 3. Interrogation du service Wikidata
+        SERVICE <https://query.wikidata.org/sparql> {
+            ?wikiEntity wdt:P31 wd:Q6465 ;       # C'est un Département de France
+                        wdt:P2586 ?codeInsee ;   # Avec le code INSEE correspondant
+                        rdfs:label ?nom ;
+                        wdt:P1082 ?pop ;
+                        wdt:P2046 ?area .
+            
+            FILTER(LANG(?nom) = "fr")
+        }
+    }
+}

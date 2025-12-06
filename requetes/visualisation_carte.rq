@@ -1,0 +1,14 @@
+PREFIX mesure: <http://www.semanticweb.org/medja/ontologies/2025/10/untitled-ontology-3#>
+
+# Récupération des coordonnées GPS des infractions pour la carte
+SELECT ?lat ?long ?vitesse ?limite
+WHERE {
+    ?m mesure:latitude ?lat ;
+       mesure:longitude ?long ;
+       mesure:vitesseMesuree ?vitesse ;
+       mesure:vitesseLimite ?limite .
+       
+    # On ne visualise que les infractions
+    FILTER(?vitesse > ?limite)
+}
+LIMIT 500
