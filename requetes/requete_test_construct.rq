@@ -1,0 +1,33 @@
+PREFIX mesure: <http://www.semanticweb.org/medja/ontologies/2025/10/untitled-ontology-3#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX wd: <http://www.wikidata.org/entity/>
+
+# CONSTRUCT permet de VISUALISER les triplets sans les insérer
+CONSTRUCT {
+    ?deptLocal owl:sameAs ?wikiEntity .
+    ?deptLocal mesure:nomDepartement ?nom .
+    ?deptLocal mesure:superficie ?superficie .
+    ?deptLocal mesure:image ?image .
+}
+WHERE {
+    # 1. Identifier nos départements locaux
+    SELECT DISTINCT ?deptLocal WHERE { 
+        ?s mesure:estLocaliseeDans ?deptLocal .
+    }
+    
+    # 2. Extraire le code INSEE 
+    BIND(STRAFTER(STR(?deptLocal), "Departement_") AS ?codeInsee)
+
+    # 3. Interroger Wikidata
+    SERVICE <https://query.wikidata.org/sparql> {
+        ?wikiEntity wdt:P31 wd:Q6465 ;        # Est un Département de France
+                    wdt:P2586 ?codeInsee .    # Code INSEE correspondant
+        
+        # Récupération des infos (OPTIONNEL permet de ne pas bloquer si une info manque)
+        OPTIONAL { ?wikiEntity rdfs:label ?nom FILTER(LANG(?nom) = "fr") }
+        OPTIONAL { ?wikiEntity wdt:P2046 ?superficie }
+        OPTIONAL { ?wikiEntity wdt:P94 ?image }  # P94 = Blason (très joli pour la viz)
+    }
+}
