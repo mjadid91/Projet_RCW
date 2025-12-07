@@ -233,6 +233,12 @@
                         <span class="small text-muted"><i class="fas fa-satellite me-2"></i><span id="val-gps">...</span></span>
                     </div>
 
+                    <div class="detail-line">
+                        <span class="text-muted small fw-bold d-block mb-1">Date</span>
+                        <span class="small text-muted"><i class="fas fa-calendar-alt me-2"></i><span id="val-date">...</span></span>
+                    </div>
+
+
                     <a id="btn-gmaps" href="#" target="_blank" class="btn btn-outline-primary w-100 mt-3 fw-semibold">
                         <i class="fas fa-map-location-dot me-2"></i>Ouvrir dans Maps
                     </a>
@@ -320,6 +326,7 @@
                     document.getElementById('val-limite').innerText = lim;
                     document.getElementById('val-exces').innerText = excessToStr(exces);
                     document.getElementById('val-gps').innerText = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+                    document.getElementById('val-date').innerText = formatDate(item.date);
                     document.getElementById('btn-gmaps').href = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
                 });
 
@@ -396,6 +403,13 @@
         .catch(err => {
             console.error('Erreur chargement densite:', err);
         });
+
+
+        function formatDate(dateStr) {
+            if (!dateStr) return 'N/A';
+            const d = new Date(dateStr);
+            return d.toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
+        }
 
 </script>
 

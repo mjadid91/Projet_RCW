@@ -49,12 +49,14 @@ def get_densite():
 def get_carte():
     query = """
     PREFIX mesure: <http://www.semanticweb.org/medja/ontologies/2025/10/untitled-ontology-3#>
-    SELECT ?lat ?long ?vitesse ?limite
+    # On ajoute ?date dans le SELECT
+    SELECT ?lat ?long ?vitesse ?limite ?date
     WHERE {
         ?m mesure:latitude ?lat ;
            mesure:longitude ?long ;
            mesure:vitesseMesuree ?vitesse ;
-           mesure:vitesseLimite ?limite .
+           mesure:vitesseLimite ?limite ;
+           mesure:aDate ?date .  # On récupère la date ici (propriété 'aDate')
         FILTER(?vitesse > ?limite)
     }
     LIMIT 500
@@ -64,7 +66,8 @@ def get_carte():
         "lat": float(row["lat"]["value"]),
         "long": float(row["long"]["value"]),
         "vitesse": row["vitesse"]["value"],
-        "limite": row["limite"]["value"]
+        "limite": row["limite"]["value"],
+        "date": row["date"]["value"]  # On ajoute la date au JSON
     } for row in data]
     return jsonify(clean_data)
 
