@@ -42,6 +42,7 @@ Projet_RCW/
 │
 ├── requetes/
 │   ├── enrichissement_wikidata.rq        # Superficie, population
+    ├── requete_test_construct.rq
 │   ├── ajout_image.rq                    # Blason / image
 │   ├── analyse_densite.rq                # Question de recherche
 │   └── visualisation_carte.rq            # Données pour l'application web
