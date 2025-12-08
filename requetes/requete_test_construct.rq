@@ -12,9 +12,11 @@ CONSTRUCT {
     ?deptLocal mesure:image ?image .
 }
 WHERE {
-    # 1. Identifier nos départements locaux
-    SELECT DISTINCT ?deptLocal WHERE { 
-        ?s mesure:estLocaliseeDans ?deptLocal .
+    # 1. Identifier nos départements locaux (AJOUT des accolades ici)
+    {
+        SELECT DISTINCT ?deptLocal WHERE { 
+            ?s mesure:estLocaliseeDans ?deptLocal .
+        }
     }
     
     # 2. Extraire le code INSEE 
@@ -28,6 +30,6 @@ WHERE {
         # Récupération des infos (OPTIONNEL permet de ne pas bloquer si une info manque)
         OPTIONAL { ?wikiEntity rdfs:label ?nom FILTER(LANG(?nom) = "fr") }
         OPTIONAL { ?wikiEntity wdt:P2046 ?superficie }
-        OPTIONAL { ?wikiEntity wdt:P94 ?image }  # P94 = Blason (très joli pour la viz)
+        OPTIONAL { ?wikiEntity wdt:P94 ?image }  # P94 = Blason
     }
 }
