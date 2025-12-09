@@ -1,3 +1,7 @@
+import os
+# Force le script à ignorer le proxy pour les adresses locales
+os.environ['NO_PROXY'] = '127.0.0.1,localhost'
+
 from flask import Flask, render_template, jsonify
 from SPARQLWrapper import SPARQLWrapper, JSON
 
