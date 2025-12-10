@@ -10,4 +10,3 @@ WHERE {
 
     FILTER(?vitesse > ?limite)
 }
-LIMIT 500

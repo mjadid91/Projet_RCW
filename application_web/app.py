@@ -63,7 +63,6 @@ def get_carte():
            mesure:aDate ?date .  # On récupère la date ici (propriété 'aDate')
         FILTER(?vitesse > ?limite)
     }
-    LIMIT 500
     """
     data = run_sparql(query)
     clean_data = [{
