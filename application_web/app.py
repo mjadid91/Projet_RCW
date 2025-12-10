@@ -43,7 +43,7 @@ def get_densite():
         BIND ((?nb / ?superficie) AS ?densite)
     }
     ORDER BY DESC(?densite)
-    LIMIT 15
+    LIMIT 20
     """
     data = run_sparql(query)
     clean_data = [{"nom": row["nom"]["value"], "densite": float(row["densite"]["value"])} for row in data]
